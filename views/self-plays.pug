@@ -4,16 +4,15 @@ html(lang="en")
         script(src="/static/tablesort/tablesort.js")
         script(src="/static/tablesort/tablesort.number.js")
         link(href="/static/tablesort/tablesort.css" rel="stylesheet")
-    body 
+    body
         table(id="sort" border="1")
             thead
                 tr
-                    th Game
-                    th Win Rate
-                    th Match Hash
+                    th Self-Play Hash
+                    th Network
                     th Winner
-                    th Score
                     th Move Count
+                    th Started
                     th Duration
                     th Download
                     th Client
@@ -21,16 +20,15 @@ html(lang="en")
             tbody
                 each item in data
                     tr
-                        td #{item.num}
-                        td #{item.winrate}%
                         td
-                            a(href="/viewmatch/" + item.sgfhash + "?viewer=wgo")  #{item.sgfhash.slice(0, 32)}
-                        td #{item.winnerhash.slice(0, 8)}
-                        td #{item.score}
+                            a(href="/view/" + item.sgfhash + "?viewer=wgo")  #{item.sgfhash.slice(0, 32)}
+                        td #{item.networkhash.slice(0, 8)}
+                        td #{item.winnercolor}
                         td #{item.movescount}
+                        td #{item.started} minutes ago
                         td #{item.duration} minutes
                         td
-                            a(href="/viewmatch/" + item.sgfhash + ".sgf")  sgf
+                            a(href="/view/" + item.sgfhash + ".sgf")  sgf
                         td #{item.ip}
                         td #{item.clientversion}
         script.
@@ -39,11 +37,4 @@ html(lang="en")
                 b = (b.match(/([.\d]+) minutes/) || [])[1] || 0;
                 return b - a;
             });
-            Tablesort.extend('score', function(item) {
-                return item.match(/(?:b|w)+([\d.]+|resign)/i);
-            }, function(a, b) {
-                return (a.match(/(?:b|w)+([\d.]+)/i) ? RegExp.$1 : 0)
-                    - (b.match(/(?:b|w)+([\d.]+)/i) ? RegExp.$1 : 0);
-            });
             new Tablesort(document.getElementById('sort'));
-            
